@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 playerScale = new Vector3(1, 0.5f, 1);
     private Vector3 playerScaleReverse = new Vector3(1, 1, 1);
     public Transform cameraTransform;
+    private bool checkCeiling;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,7 +29,7 @@ public class PlayerController : MonoBehaviour
         }
         //transform.position = transform.position + Camera.main.transform.forward * Time.deltaTime;
 
-        Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        Vector3 move = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
         move = cameraTransform.TransformDirection(move);
         controller.Move(move * Time.deltaTime * playerSpeed);
     
@@ -42,15 +43,26 @@ public class PlayerController : MonoBehaviour
             playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
         }
 
-        if(Input.GetButton("Fire3"))
+        checkCeiling = Physics.Raycast(this.transform.position, Vector3.up, 2.0f, -1);
+
+        if (Input.GetButton("Fire3"))
         {
             gameObject.transform.localScale = playerScale;
             //gameObject.transform.Translate(0, -100, 0);
             controller.Move(new Vector3(0, -0.5f, 0));
+            playerSpeed = 1.0f;
+        }
+        else if (!checkCeiling)
+        {
+            gameObject.transform.localScale = playerScaleReverse;
+            playerSpeed = 2.0f;
         }
         else
         {
-            gameObject.transform.localScale = playerScaleReverse;
+            gameObject.transform.localScale = playerScale;
+            //gameObject.transform.Translate(0, -100, 0);
+            controller.Move(new Vector3(0, -0.5f, 0));
+            playerSpeed = 1.0f;
         }
         //if (Input.GetButtonUp("Fire3") && groundedPlayer)
         //{
