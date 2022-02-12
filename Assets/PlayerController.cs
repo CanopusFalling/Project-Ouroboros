@@ -78,11 +78,13 @@ public class PlayerController : MonoBehaviour
 
             playerSpeed = PLAYER_SPEED_VAL;
         }
-        //if (Input.GetButtonUp("Fire3") && groundedPlayer)
-        //{
-        //    gameObject.transform.localScale = playerScaleReverse;
-        //}
 
+
+
+        if (Input.GetButtonDown("Interact"))
+        {
+            Debug.Log("interact");
+        }
         playerVelocity.y += gravityValue * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
     }
